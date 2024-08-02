@@ -76,5 +76,10 @@ Follow these steps to set up the project locally:
 
     The application should now be running at `http://localhost:3000`.
 
-## File Structure
+
+## Technologies Used
+
+- Frontend: React, Bootstrap
+- Backend: Node.js, Express
+- Database: MongoDB
 
