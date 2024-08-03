@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Form, Button, Row, Col } from 'react-bootstrap';
 
+const API_URL = process.env.REACT_APP_API_URL || 'https://free-ap-south-1.cosmocloud.io/development/api/employees'; // Use the Cosmocloud API URL or environment variable
+
 const AddEmployee = () => {
   const [employee, setEmployee] = useState({
     name: '',
@@ -42,7 +44,7 @@ const AddEmployee = () => {
     console.log('Submitting Employee:', employee);
 
     try {
-      const response = await axios.post('http://localhost:5000/api/employees', employee);
+      const response = await axios.post(`${API_URL}/api/employees`, employee);
       console.log('Employee added:', response.data);
       setEmployee({
         name: '',

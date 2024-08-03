@@ -3,12 +3,14 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Card, ListGroup } from 'react-bootstrap';
 
+const API_URL = process.env.REACT_APP_API_URL || 'https://free-ap-south-1.cosmocloud.io/development/api/employees'; // Use the Cosmocloud API URL or environment variable
+
 const EmployeeDetails = () => {
   const { id } = useParams();
   const [employee, setEmployee] = useState(null);
 
   useEffect(() => {
-    axios.get(`http://localhost:5000/api/employees/${id}`)
+    axios.get(`${API_URL}/api/employees/${id}`)
       .then(response => {
         setEmployee(response.data);
       })

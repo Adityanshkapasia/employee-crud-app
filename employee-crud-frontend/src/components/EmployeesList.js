@@ -3,11 +3,13 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { Button, Table } from 'react-bootstrap';
 
+const API_URL = process.env.REACT_APP_API_URL || 'https://free-ap-south-1.cosmocloud.io/development/api/employees'; // Use the Cosmocloud API URL or environment variable
+
 const EmployeesList = () => {
   const [employees, setEmployees] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/employees')
+    axios.get(`${API_URL}/api/employees`)
       .then(response => {
         setEmployees(response.data);
       })
@@ -17,7 +19,7 @@ const EmployeesList = () => {
   }, []);
 
   const handleDelete = (emp_id) => {
-    axios.delete(`http://localhost:5000/api/employees/${emp_id}`)
+    axios.delete(`${API_URL}/api/employees/${emp_id}`)
       .then(response => {
         setEmployees(employees.filter(employee => employee.emp_id !== emp_id));
       })
