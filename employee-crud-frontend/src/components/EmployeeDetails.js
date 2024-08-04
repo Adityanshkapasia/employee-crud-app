@@ -10,7 +10,7 @@ const EmployeeDetails = () => {
   const [employee, setEmployee] = useState(null);
 
   useEffect(() => {
-    axios.get(`${API_URL}/api/employees/${id}`)
+    axios.get(`${API_URL}/${id}`)
       .then(response => {
         setEmployee(response.data);
       })

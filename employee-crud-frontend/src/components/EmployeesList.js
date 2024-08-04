@@ -5,11 +5,24 @@ import { Button, Table } from 'react-bootstrap';
 
 const API_URL = process.env.REACT_APP_API_URL || 'https://free-ap-south-1.cosmocloud.io/development/api/employees'; // Use the Cosmocloud API URL or environment variable
 
+const headers = {
+  environmentId: '66abbb604f5cc3a16949083c',
+  projectId: '66abbb604f5cc3a16949083b',
+};
+
+const params = {
+  limit: 10,
+  offset: 0,
+};
+
 const EmployeesList = () => {
   const [employees, setEmployees] = useState([]);
 
   useEffect(() => {
-    axios.get(`${API_URL}/api/employees`)
+    axios.get(API_URL, {
+      headers: headers,
+      params: params,
+    })
       .then(response => {
         setEmployees(response.data);
       })
@@ -19,7 +32,9 @@ const EmployeesList = () => {
   }, []);
 
   const handleDelete = (emp_id) => {
-    axios.delete(`${API_URL}/api/employees/${emp_id}`)
+    axios.delete(`${API_URL}/${emp_id}`, {
+      headers: headers
+    })
       .then(response => {
         setEmployees(employees.filter(employee => employee.emp_id !== emp_id));
       })

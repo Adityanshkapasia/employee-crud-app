@@ -2,11 +2,14 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Form, Button, Row, Col } from 'react-bootstrap';
 
-const API_URL = process.env.REACT_APP_API_URL || 'https://free-ap-south-1.cosmocloud.io/development/api/employees'; // Use the Cosmocloud API URL or environment variable
+const API_URL = process.env.REACT_APP_API_URL || 'https://free-ap-south-1.cosmocloud.io/development/api/employees';
+const projectId = '66abbb604f5cc3a16949083b';
+const environmentId = '66abbb604f5cc3a16949083c';
 
 const AddEmployee = () => {
   const [employee, setEmployee] = useState({
     name: '',
+    emp_id: '',
     address: { line1: '', city: '', country: '', zip_code: '' },
     contact_methods: [{ contact_method: 'EMAIL', value: '' }]
   });
@@ -43,11 +46,42 @@ const AddEmployee = () => {
     e.preventDefault();
     console.log('Submitting Employee:', employee);
 
+    // Wrap the payload according to the expected schema
+    const payload = {
+      properties: {
+        name: employee.name,
+        emp_id: employee.emp_id,
+        address: {
+          properties: {
+            line1: employee.address.line1,
+            city: employee.address.city,
+            country: employee.address.country,
+            zip_code: employee.address.zip_code,
+          }
+        },
+        contact_methods: {
+          items: employee.contact_methods.map((method) => ({
+            properties: {
+              contact_method: method.contact_method,
+              value: method.value,
+            }
+          }))
+        }
+      }
+    };
+
+    const headers = {
+      'Content-Type': 'application/json',
+      'projectId': projectId,
+      'environmentId': environmentId
+    };
+
     try {
-      const response = await axios.post(`${API_URL}/api/employees`, employee);
+      const response = await axios.post(API_URL, payload, { headers });
       console.log('Employee added:', response.data);
       setEmployee({
         name: '',
+        emp_id: '',
         address: { line1: '', city: '', country: '', zip_code: '' },
         contact_methods: [{ contact_method: 'EMAIL', value: '' }]
       });
@@ -78,7 +112,15 @@ const AddEmployee = () => {
             <Form.Control type="text" name="name" value={employee.name} onChange={handleChange} required />
           </Col>
         </Form.Group>
-        <Form.Group as={Row} controlId="formPlaintextAddress">
+        <Form.Group as={Row} controlId="formPlaintextEmpId">
+          <Form.Label column sm="2">
+            Employee ID
+          </Form.Label>
+          <Col sm="10">
+            <Form.Control type="text" name="emp_id" value={employee.emp_id} onChange={handleChange} required />
+          </Col>
+        </Form.Group>
+        <Form.Group as={Row} controlId="formPlaintextAddressLine1">
           <Form.Label column sm="2">
             Address Line 1
           </Form.Label>
@@ -102,7 +144,7 @@ const AddEmployee = () => {
             <Form.Control type="text" name="country" value={employee.address.country} onChange={handleAddressChange} />
           </Col>
         </Form.Group>
-        <Form.Group as={Row} controlId="formPlaintextZip">
+        <Form.Group as={Row} controlId="formPlaintextZipCode">
           <Form.Label column sm="2">
             Zip Code
           </Form.Label>
